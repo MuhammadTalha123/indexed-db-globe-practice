@@ -6,6 +6,7 @@ import { saveAsBlobInIDB, saveAsDBInIDB } from "./IDB";
 function App() {
   const [startValue, setStartValue] = useState(0);
   const [endValue, setEndValue] = useState(0);
+  const [score, setScore] = useState(0);
 
   const handleStartValue = (e) => {
     setStartValue(parseInt(e.target.value));
@@ -22,6 +23,7 @@ function App() {
         type: "text/plain",
       });
       await saveAsBlobInIDB(sha, blob);
+      setScore(i);
     }
     alert("Data saved successfully");
   };
@@ -33,6 +35,7 @@ function App() {
         type: "text/plain",
       });
       await saveAsDBInIDB(sha, blob);
+      setScore(i);
     }
     alert("Data saved successfully");
   };
@@ -40,6 +43,7 @@ function App() {
   return (
     <div className="App">
       <h1>Blob Testing</h1>
+      <h2>Score: {score}</h2>
       <label>Start value</label>
       <input type="number" value={startValue} onChange={handleStartValue} />
       <br />

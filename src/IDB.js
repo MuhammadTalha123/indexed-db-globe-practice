@@ -12,16 +12,24 @@ export const initializeDB = async (dbName, storeName, version) => {
   return db;
 };
 
-export const saveAsBlobInIDB = async (sha, myblob) => {
-  let dbVersion = await openDB("myDb");
-  dbVersion.close();
-  const db = await initializeDB("myDb", sha, dbVersion.version + 1);
-  await db.put(sha, myblob, sha);
-  await db.close();
+export const saveAsBlobInIDB = async (sha, myblob, key) => {
+  let db = await openDB("myDB", 1, {
+    upgrade(db) {
+      db.createObjectStore("sha");
+    },
+  });
+  await db.put("sha", myblob, key);
+  console.count();
+  db.close();
 };
 
-export const saveAsDBInIDB = async (sha, myblob) => {
-  const db = await initializeDB(sha, "data", 1);
-  await db.put("data", myblob, sha);
-  await db.close();
+export const saveAsDBInIDB = async (sha, myblob, key) => {
+  let db = await openDB(sha, 1, {
+    upgrade(db) {
+      db.createObjectStore("sha");
+    },
+  });
+  await db.put("sha", myblob, key);
+  console.count();
+  db.close();
 };

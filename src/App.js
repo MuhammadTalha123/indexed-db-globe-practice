@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import { sha256 } from "js-sha256";
 import { saveAsBlobInIDB, saveAsDBInIDB } from "./IDB";
+import { openDB } from "idb";
 
 function App() {
   const [startValue, setStartValue] = useState(0);
@@ -17,26 +18,32 @@ function App() {
   };
 
   const saveAsBlob = async () => {
+    // let dbs = [];
     for (let i = startValue; i <= endValue; i++) {
       let sha = sha256("db" + i);
       let blob = new Blob(["db" + i], {
         type: "text/plain",
       });
-      await saveAsBlobInIDB(sha, blob);
+      await saveAsBlobInIDB(sha, blob, i);
+      // dbs.push(saveAsBlobInIDB(sha, blob));
       setScore(i);
     }
+    // await Promise.all(dbs);
     alert("Data saved successfully");
   };
 
   const saveAsDB = async () => {
+    let dbs = [];
     for (let i = startValue; i <= endValue; i++) {
       let sha = sha256("db" + i);
       let blob = new Blob(["db" + i], {
         type: "text/plain",
       });
-      await saveAsDBInIDB(sha, blob);
+      await saveAsDBInIDB(sha, blob,i);
+      // dbs.push(saveAsDBInIDB(sha, blob,i));
       setScore(i);
     }
+    await Promise.all(dbs);
     alert("Data saved successfully");
   };
 
